@@ -1,0 +1,25 @@
+services:
+  api:
+    build: .
+    container_name: ai_job_matcher_api
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ai_job_matcher
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: ai_job_matcher_db
+    environment:
+      - POSTGRES_DB=ai_job_matcher
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
