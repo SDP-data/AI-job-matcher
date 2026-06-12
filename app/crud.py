@@ -29,3 +29,12 @@ def create_match_result(
     db.refresh(db_match)
 
     return db_match
+
+
+def get_match_results(db: Session, limit: int = 10):
+    return (
+        db.query(models.MatchResult)
+        .order_by(models.MatchResult.created_at.desc())
+        .limit(limit)
+        .all()
+    )

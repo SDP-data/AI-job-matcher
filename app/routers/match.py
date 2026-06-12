@@ -124,3 +124,21 @@ async def match_candidate_pdf(
         "candidate_skills": candidate_skills,
         **result
     }
+
+
+@router.get("/matches")
+def list_match_results(limit: int = 10, db: Session = Depends(get_db)):
+    results = crud.get_match_results(db=db, limit=limit)
+
+    return [
+        {
+            "id": item.id,
+            "job_title": item.job_title,
+            "match_score": item.match_score,
+            "recommendation": item.recommendation,
+            "matching_skills": item.matching_skills,
+            "missing_skills": item.missing_skills,
+            "created_at": item.created_at,
+        }
+        for item in results
+    ]
