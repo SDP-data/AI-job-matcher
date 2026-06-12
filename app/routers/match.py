@@ -1,9 +1,9 @@
-from fastapi import FastAPI, UploadFile, File, Form
+from fastapi import APIRouter, UploadFile, File, Form
 from pydantic import BaseModel
 from pypdf import PdfReader
 import io
 
-app = FastAPI(title="AI Job Matcher")
+router = APIRouter()
 
 
 class MatchRequest(BaseModel):
@@ -70,12 +70,7 @@ def calculate_match(job_skills: list[str], candidate_skills: list[str]) -> dict:
     }
 
 
-@app.get("/")
-def home():
-    return {"message": "AI Job Matcher API is running"}
-
-
-@app.post("/match")
+@router.post("/match")
 def match_candidate(data: MatchRequest):
     job_skills = find_skills(data.job_description)
     candidate_skills = find_skills(data.candidate_profile)
@@ -90,7 +85,7 @@ def match_candidate(data: MatchRequest):
     }
 
 
-@app.post("/match-pdf")
+@router.post("/match-pdf")
 async def match_candidate_pdf(
     job_title: str = Form(...),
     job_description: str = Form(...),
